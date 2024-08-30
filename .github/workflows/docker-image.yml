@@ -34,7 +34,6 @@ jobs:
         context: .
         push: true
         tags: ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKER_REPOSITORY }}:latest,${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKER_REPOSITORY }}:${{ github.sha }}
-
   #
   # Deploy on a self hosted server
   #
