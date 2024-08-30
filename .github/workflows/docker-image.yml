@@ -12,7 +12,7 @@ env:
   DOCKER_REPOSITORY: events-rest-api
 
 jobs:
-  build-and-push:
+  docker-build-push:
     runs-on: ubuntu-latest
     environment: Development
     steps:
@@ -39,7 +39,9 @@ jobs:
   # Deploy on a self hosted server
   #
   deploy:
+    needs: docker-build-push
     runs-on: self-hosted  # This specifies that we're using a self-hosted runner
+    environment: Development
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -55,7 +57,7 @@ jobs:
 
     - name: Deploy to Kubernetes
       run: |
-        helm upgrade --install my-release ./my-chart \
+        helm upgrade --install api-events ./my-chart \
           --namespace my-namespace \
           --set image.tag=${{ github.sha }} \
           --values ./my-values.yaml
