@@ -13,7 +13,7 @@ env:
 
 jobs:
   docker-build-push:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     environment: Development
     steps:
     - name: Check out code
@@ -40,7 +40,7 @@ jobs:
   #
   deploy:
     needs: docker-build-push
-    runs-on: [self-hosted,Linux,X64]  # This specifies that we're using a self-hosted runner
+    runs-on: self-hosted  # This specifies that we're using a self-hosted runner
     environment: Development
     steps:
     - name: Checkout code
