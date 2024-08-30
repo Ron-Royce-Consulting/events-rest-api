@@ -34,3 +34,28 @@ jobs:
         context: .
         push: true
         tags: ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKER_REPOSITORY }}:latest,${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKER_REPOSITORY }}:${{ github.sha }}
+
+  #
+  # Deploy on a self hosted server
+  #
+  deploy:
+    runs-on: self-hosted  # This specifies that we're using a self-hosted runner
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Removed kubectl setup step as it's assumed to be pre-installed on the self-hosted runner
+
+    - name: Configure kubectl
+      run: |
+        echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 --decode > kubeconfig
+        echo "KUBECONFIG=kubeconfig" >> $GITHUB_ENV
+
+    # Removed Helm setup step as it's assumed to be pre-installed on the self-hosted runner
+
+    - name: Deploy to Kubernetes
+      run: |
+        helm upgrade --install my-release ./my-chart \
+          --namespace my-namespace \
+          --set image.tag=${{ github.sha }} \
+          --values ./my-values.yaml
