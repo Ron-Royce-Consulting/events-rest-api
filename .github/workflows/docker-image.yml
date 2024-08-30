@@ -1,4 +1,4 @@
-name: Build and Push Docker image to DockerHub
+name: Build and push docker image to Dockerhub and deploy to kubernetes using helm 
 
 on:
   push:
