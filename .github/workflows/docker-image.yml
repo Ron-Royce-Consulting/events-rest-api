@@ -50,8 +50,7 @@ jobs:
 
     - name: Configure kubectl
       run: |
-        echo "${{ env.KUBE_CONFIG_DATA }}"
-        echo "${{ env.KUBE_CONFIG_DATA }}" | base64 --decode > kubeconfig
+        echo "${{ env.KUBE_CONFIG_DATA }}" > kubeconfig
         echo "KUBECONFIG=kubeconfig" >> $GITHUB_ENV
 
     - name: Install Helm
