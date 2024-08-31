@@ -52,7 +52,13 @@ jobs:
         echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 --decode > kubeconfig
         echo "KUBECONFIG=kubeconfig" >> $GITHUB_ENV
 
-    # Removed Helm setup step as it's assumed to be pre-installed on the self-hosted runner
+    - name: Install Helm
+      uses: azure/setup-helm@v4.2.0
+      with:
+        version: 'latest' # default is latest (stable)
+      id: install
+        
+      # Removed Helm setup step as it's assumed to be pre-installed on the self-hosted runner
 
     - name: Deploy to Kubernetes
       run: |
