@@ -48,18 +48,23 @@ jobs:
 
     # Removed kubectl setup step as it's assumed to be pre-installed on the self-hosted runner
 
-    - name: Configure kubectl
-      run: |
-        echo "${{ env.KUBE_CONFIG_DATA }}" > kubeconfig
-        echo "KUBECONFIG=kubeconfig" >> $GITHUB_ENV
-        ls -ltr
+    #- name: Configure kubectl
+    #  run: |
+    #    echo "${{ env.KUBE_CONFIG_DATA }}" > kubeconfig
+    ##    echo "KUBECONFIG=kubeconfig" >> $GITHUB_ENV
+    #    ls -ltr
 
     - name: Install Helm
       uses: azure/setup-helm@v4.2.0
       with:
         version: 'latest' # default is latest (stable)
       id: install
-        
+
+    - name: Configure kubectl
+      uses: azure/k8s-set-context@v1
+      with:
+        kubeconfig: ${{ secrets.KUBE_CONFIG_DATA }}
+
       # Removed Helm setup step as it's assumed to be pre-installed on the self-hosted runner
 
     - name: Deploy to Kubernetes
