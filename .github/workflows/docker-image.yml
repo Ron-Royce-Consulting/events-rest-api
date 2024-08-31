@@ -50,8 +50,8 @@ jobs:
 
     - name: Configure kubectl
       run: |
-        echo "${{ env.KUBE_CONFIG_DATA }}" > /tmp/kubeconfig
-        echo "KUBECONFIG=/tmp/kubeconfig" >> $GITHUB_ENV
+        echo "${{ env.KUBE_CONFIG_DATA }}" > kubeconfig
+        echo "KUBECONFIG=kubeconfig" >> $GITHUB_ENV
 
     - name: Install Helm
       uses: azure/setup-helm@v4.2.0
@@ -65,4 +65,4 @@ jobs:
       run: |
         git submodule update --init --recursive
         cd helm
-        helm upgrade  --kubeconfig=/tmp/kubeconfig --install api-events ./k8_charts -n dev-ronroyce-tech --set image.tag=${{ github.sha }}
+        helm upgrade  --kubeconfig=kubeconfig --install api-events ./k8_charts -n dev-ronroyce-tech --set image.tag=${{ github.sha }}
