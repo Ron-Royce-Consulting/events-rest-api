@@ -52,6 +52,7 @@ jobs:
       run: |
         echo "${{ env.KUBE_CONFIG_DATA }}" > kubeconfig
         echo "KUBECONFIG=kubeconfig" >> $GITHUB_ENV
+        ls -ltr
 
     - name: Install Helm
       uses: azure/setup-helm@v4.2.0
