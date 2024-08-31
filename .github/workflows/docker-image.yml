@@ -71,4 +71,4 @@ jobs:
       run: |
         git submodule update --init --recursive
         cd helm
-        helm upgrade  --kubeconfig=kubeconfig --install api-events ./k8_charts -n dev-ronroyce-tech --set image.tag=${{ github.sha }}
+        helm upgrade --install api-events ./k8_charts -n dev-ronroyce-tech --set image.tag=${{ github.sha }}
