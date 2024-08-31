@@ -39,7 +39,7 @@ jobs:
   #
   deploy:
     needs: docker-build-push
-    runs-on: self-hosted  # This s
+    runs-on: self-hosted 
     environment: Development
     steps:
     - name: Checkout code
