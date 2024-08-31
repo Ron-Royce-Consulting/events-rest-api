@@ -1,0 +1,3 @@
+[submodule "helm/k8_charts"]
+	path = helm/k8_charts
+	url = https://github.com/ron-royce-consulting/k8_charts.git
