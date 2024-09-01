@@ -1,6 +1,5 @@
 image:
   repository: roycedev22/events-rest-api
-  tag: latest
   pullPolicy: Always
 
 additionalLabels:
@@ -10,7 +9,6 @@ additionalLabels:
 containerPorts:
   - containerPort: 8080
     protocol: TCP
-    name: http
 
 service:
   servicePort:
@@ -18,9 +16,6 @@ service:
     port: 80
     protocol: TCP
     targetPort: http
-
-readinessProbe:
-  enabled: false
 
 autoscaling:
   enabled: false
