@@ -18,3 +18,6 @@ service:
     port: 80
     protocol: TCP
     targetPort: http
+
+readinessProbe:
+  enabled: false
