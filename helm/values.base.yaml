@@ -1,0 +1,32 @@
+image:
+  repository: roycedev22/events-rest-api
+  pullPolicy: Always
+
+additionalLabels:
+  app: api-events
+  version: v1
+
+containerPorts:
+  - containerPort: 8080
+    protocol: TCP
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+ingress:
+  enabled: true
+  className: "nginx"
+  hosts:
+    - host: ronroyce.tech
+      paths:
+        - path: /
+          pathType: Prefix
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80

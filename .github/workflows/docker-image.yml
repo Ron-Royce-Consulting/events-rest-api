@@ -7,17 +7,18 @@ on:
     branches: [ "main" ]
 
 env:
+  KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
   DOCKER_REPOSITORY: events-rest-api
 
 jobs:
   docker-build-push:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04 
     environment: Development
     steps:
     - name: Check out code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
@@ -34,30 +35,40 @@ jobs:
         context: .
         push: true
         tags: ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKER_REPOSITORY }}:latest,${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKER_REPOSITORY }}:${{ github.sha }}
-
   #
   # Deploy on a self hosted server
   #
   deploy:
     needs: docker-build-push
-    runs-on: [self-hosted,Linux,X64]  # This specifies that we're using a self-hosted runner
+    runs-on: self-hosted 
     environment: Development
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     # Removed kubectl setup step as it's assumed to be pre-installed on the self-hosted runner
 
-    - name: Configure kubectl
-      run: |
-        echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 --decode > kubeconfig
-        echo "KUBECONFIG=kubeconfig" >> $GITHUB_ENV
+    #- name: Configure kubectl
+    #  run: |
+    #    echo "${{ env.KUBE_CONFIG_DATA }}" > kubeconfig
+    ##    echo "KUBECONFIG=kubeconfig" >> $GITHUB_ENV
+    #    ls -ltr
 
-    # Removed Helm setup step as it's assumed to be pre-installed on the self-hosted runner
+    - name: Install Helm
+      uses: azure/setup-helm@v4.2.0
+      with:
+        version: 'latest' # default is latest (stable)
+      id: install
+
+    - name: Configure kubectl
+      uses: azure/k8s-set-context@v1
+      with:
+        kubeconfig: ${{ secrets.KUBE_CONFIG_DATA }}
+
+      # Removed Helm setup step as it's assumed to be pre-installed on the self-hosted runner
 
     - name: Deploy to Kubernetes
       run: |
-        helm upgrade --install api-events ./my-chart \
-          --namespace my-namespace \
-          --set image.tag=${{ github.sha }} \
-          --values ./my-values.yaml
+        git submodule update --init --recursive
+        cd helm
+        helm upgrade --install api-events ./k8_charts/charts/app-deploy-template -f ./values.base.yaml -n dev-ronroyce-tech --set image.tag=${{ github.sha }}
