@@ -1,4 +1,4 @@
-FROM python:3.12-alpine
+FROM python:3.11-alpine
 
 WORKDIR /app
 
@@ -8,11 +8,9 @@ RUN pip3 install --upgrade pip
 
 RUN pip3 install -r /app/requirements.txt
 
-
 COPY ./api /app/
 
 EXPOSE 8080
 
 
-
-CMD ["gunicorn","--config", "gunicorn_config.py", "app:app"]
+CMD ["gunicorn","--config", "/app/gunicorn_config.py", "app:app"]
