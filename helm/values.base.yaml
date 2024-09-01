@@ -11,11 +11,18 @@ containerPorts:
     protocol: TCP
 
 service:
-  servicePort:
-    name: http
-    port: 80
-    protocol: TCP
-    targetPort: http
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+ingress:
+  enabled: true
+  className: "nginx"
+  hosts:
+    - host: ronroyce.tech
+      paths:
+        - path: /
+          pathType: Prefix
 
 autoscaling:
   enabled: false
