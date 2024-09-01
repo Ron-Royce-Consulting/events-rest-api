@@ -1,9 +1,4 @@
-from flask import Flask, jsonify
-from flask_restful import Api
-from flask_sqlalchemy import SQLAlchemy
-from werkzeug.exceptions import HTTPException
-from werkzeug.exceptions import default_exceptions
-import api.settings as settings
+from flask import Flask
 
 app = Flask(__name__)
 
